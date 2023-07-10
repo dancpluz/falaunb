@@ -16,32 +16,23 @@ const Nav = styled.nav`
   align-self: stretch;
   border-radius: 1.25rem;
   background: ${({ theme }) => theme.colors.light};
+
   
   h3 {
     color: ${({ theme }) => theme.colors.dark};
   }
-
 `;
-
-const styleSelected = (selected) => {
-  if (selected) {
-    return `${({ theme }) => theme.colors.dark}`
-  } else {
-    return `white`
-  }
-}
 
 const NavItem = styled(Link)`
   display: flex;
-  height: 2.75rem;
-  padding: 0.625rem 1.25rem;
+  padding: 0.6rem 1.25rem;
   align-items: center;
   gap: 0.5rem;
   align-self: stretch;
   text-decoration: none;
   
   border: 3px solid;
-  border-color: ${(props) => styleSelected(props.selected)};
+  border-color: ${(props) => props.selected ? '#1B1C1E' : 'white'};
   border-radius: 2.5rem;
 `;
 
