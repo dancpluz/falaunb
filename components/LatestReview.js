@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import Image from 'next/image'
 import trending from '../assets/trending-up.svg';
 import Stars from './Stars';
+import { useEffect, useState } from 'react';
+import supabase from '../utils/supabase.js'
+import { formatDate, formatInitials } from '@/utils/formatting';
 
 
 const Container = styled.div`
@@ -64,6 +67,50 @@ export default function LatestReview() {
     'nota': 4,
     'data': '07/07/2023'
   }
+  
+  const [latestReview, setLatestReview] = useState(null)
+  const [isLoading,setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchLatestReview = async () => {
+      const { data } = await supabase
+      .from("avaliacao")
+      .select(`*, cod_turma(turma, cod_disciplina(nome)), mat_estudante(nome)`)
+      .order("codigo",{ ascending: false })
+      .limit(1);
+
+      setLatestReview(data[0])
+      console.log(data[0])
+      setIsLoading(false)
+    }
+
+    fetchLatestReview()
+  },[])
+
+  if (isLoading) {
+    return (
+    <Container>
+      <TitleDiv>
+        <Image alt={'trending'} src={trending} />
+        <h3>Última Avaliação</h3>
+      </TitleDiv>
+        <h4>Carregando...</h4>
+      <RatingHeader>
+        <div>
+          <p>...</p>
+          <h4>...</h4>
+        </div>
+      </RatingHeader>
+      <p>...</p>
+      <StarDiv>
+        <h4>Nota: </h4>
+        <Stars rating={0} />
+      </StarDiv>
+    </Container>
+    )
+  }
+
+  const {cod_turma, data, mat_estudante, nome_professor, nota, texto} = latestReview
 
   return (
     <Container>
@@ -71,20 +118,19 @@ export default function LatestReview() {
         <Image alt={'trending'} src={trending}/>
         <h3>Última Avaliação</h3>
       </TitleDiv>
-      <h4>Prof. {a.professor}</h4>
+      <h4>Prof. {nome_professor}</h4>
       <RatingHeader>
         <div>
-          <p>{a.disciplina} - Turma {a.turma}</p>
-          <h4>{a.avaliador} diz:</h4> 
+          <p>{formatInitials(cod_turma.cod_disciplina.nome)} - Turma {cod_turma.turma}</p>
+          <h4>{mat_estudante.nome} diz:</h4> 
         </div>
-        <p>{a.data}</p>
+        <p>{formatDate(data)}</p>
       </RatingHeader>
-      <p>{a.texto}</p>
+      <p>{texto}</p>
       <StarDiv>
         <h4>Nota: </h4>
-        <Stars rating={a.nota}/>
+        <Stars rating={nota}/>
       </StarDiv>
-      
     </Container>
   )
 }

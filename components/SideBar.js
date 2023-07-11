@@ -43,6 +43,7 @@ const UnBLogo = styled(Image)`
 
 const Footer = styled.p`
   position: absolute;
+  z-index: 1;
   bottom: 5.5rem;
   width: 100%;
   left: 50%;
