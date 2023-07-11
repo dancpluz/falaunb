@@ -4,17 +4,36 @@ export function formatDate(string) {
   return `${stringArray[2]}/${stringArray[1]}/${stringArray[0]}`;
 }
 
-export function formatSubject(string) {
+export function formatTeacherName(string) {
+  let words = string.split(' ');
 
-  let words = string.split(' ')
+  let result = [];
+  let count = 2;
+  
+  for (const word of words) {
+    if (count === 0) {
+      break;
+    } else if (word.length < 4) {
+      result.push(word);
+    } else {
+      result.push(word);
+      count -= 1;
+    }
+  }
+
+  return result.join(' ')
+}
+
+export function formatSubject(string) {
+  let words = string.split(' ');
 
   let result = [];
 
   for (const word of words) {
     if (word.length > 4) {
-      result.push(word[0] + word.substring(1).toLowerCase())
+      result.push(word[0] + word.substring(1).toLowerCase());
     } else {
-      result.push(word.toLowerCase())
+      result.push(word.toLowerCase());
     }
   }
 

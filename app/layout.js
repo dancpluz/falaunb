@@ -22,6 +22,28 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     color: ${({ theme }) => theme.colors.dark};
     z-index: 2;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  input {
+    height: 3rem;
+    font-size: 1rem;
+    flex-grow: 1;
+    border-radius: 0.5rem;
+    border: 3px solid ${({ theme }) => theme.colors.dark};
+    padding-left: 2.75rem;
+  }
+
+  button {
+    height: 3.5rem;
+    border-radius: 0.625rem;
+    border: 0;
+    color: ${({ theme }) => theme.colors.light};
+    background: ${({ theme }) => theme.colors.dark};
+    width: 100%;
+    font-weight: 600;
+    font-size: 1.25rem;
+    cursor: pointer;
   }
 
   div {

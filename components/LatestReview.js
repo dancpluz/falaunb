@@ -4,7 +4,7 @@ import trending from '../assets/trending-up.svg';
 import Stars from './Stars';
 import { useEffect, useState } from 'react';
 import supabase from '../utils/supabase.js'
-import { formatDate, formatInitials } from '@/utils/formatting';
+import { formatDate,formatInitials,formatTeacherName } from '@/utils/formatting';
 
 
 const Container = styled.div`
@@ -118,11 +118,13 @@ export default function LatestReview() {
         <Image alt={'trending'} src={trending}/>
         <h3>Última Avaliação</h3>
       </TitleDiv>
-      <h4>Prof. {nome_professor}</h4>
+      <h4>Prof. {formatTeacherName(nome_professor)}</h4>
       <RatingHeader>
         <div>
+          {cod_turma &&  
           <p>{formatInitials(cod_turma.cod_disciplina.nome)} - Turma {cod_turma.turma}</p>
-          <h4>{mat_estudante.nome} diz:</h4> 
+          }
+          <h4>{mat_estudante ? mat_estudante.nome : 'Anônimo'} falou:</h4>
         </div>
         <p>{formatDate(data)}</p>
       </RatingHeader>
