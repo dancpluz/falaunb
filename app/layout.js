@@ -1,8 +1,10 @@
 'use client'
 
+import styled from 'styled-components';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { Montserrat } from 'next/font/google';
 import SideBar from '@/components/SideBar';
+
 
 export const metadata = {
   title: 'FalaUnB',
@@ -52,6 +54,13 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const MainDiv = styled.div`
+  margin-left: 26rem;
+  border-radius: 0;
+  background: linear-gradient(180deg, #FAF5EC 5.60%, #FCD58D 81.63%);
+  height: 100vh;
+`;
+
 const theme = {
   colors: {
     light: '#FFFFFF',
@@ -60,7 +69,6 @@ const theme = {
     yellow: '#E59500',
     lowYellow: 'rgba(229,149,0,0.20)',
     background: 'linear-gradient(180deg, #FAF5EC 5.60%, #FCD58D 81.63%)'
-    
   }
 }
 
@@ -71,7 +79,9 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <body className={montserrat.className}>
           <SideBar />
-          {children}
+          <MainDiv>  
+            {children}
+          </MainDiv>
         </body>
       </html>
     </ThemeProvider>

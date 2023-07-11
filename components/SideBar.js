@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import logo from '../assets/logo.svg'
 import unb from '../assets/unb.svg'
 import Image from 'next/image';
+import Link from 'next/link'
 import NavBar from './NavBar';
 import LatestReview from './LatestReview';
 
@@ -19,7 +20,7 @@ const Container = styled.div`
   z-index: 0;
 `;
 
-const LogoDiv = styled.div`
+const LogoDiv = styled(Link)`
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -55,7 +56,7 @@ const Footer = styled.p`
 export default function SideBar() {
   return (
     <Container>
-      <LogoDiv>
+      <LogoDiv href={'/'}>
         <Image alt={'logo'} src={logo} />
         <h1>FalaUnB</h1>
       </LogoDiv>

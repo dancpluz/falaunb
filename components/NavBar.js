@@ -25,7 +25,7 @@ const Nav = styled.nav`
 
 const NavItem = styled(Link)`
   display: flex;
-  padding: 0.6rem 1.25rem;
+  padding: 0.6rem 1rem;
   align-items: center;
   gap: 0.5rem;
   align-self: stretch;
@@ -41,7 +41,7 @@ export default function NavBar() {
 
   return (
     <Nav>
-      <NavItem href={''} selected={true}>
+      <NavItem href={'/'} selected={true}>
         <Image alt={'home'} src={home}/>
         <h3>Home</h3>
       </NavItem>
@@ -49,7 +49,7 @@ export default function NavBar() {
         <Image alt={'star'} src={star} />
         <h3>Avaliar</h3>
       </NavItem>
-      <NavItem href={''} selected={false}>
+      <NavItem href={'/entrar'} selected={false}>
         <Image alt={'user'} src={user} />
         <h3>Perfil</h3>
       </NavItem>
