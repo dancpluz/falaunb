@@ -6,6 +6,7 @@ import star from '../assets/star.svg';
 import user from '../assets/user.svg';
 import bookmark from '../assets/bookmark.svg';
 import alertTriangle from '../assets/alert-triangle.svg';
+import { usePathname } from 'next/navigation'
 
 const Nav = styled.nav`
   display: flex;
@@ -38,27 +39,29 @@ const NavItem = styled(Link)`
 
 export default function NavBar() {
   const admin = false;
+  const logged = false;
+  const pathName = usePathname();
 
   return (
     <Nav>
-      <NavItem href={'/'} selected={true}>
+      <NavItem href={'/'} selected={pathName == '/'}>
         <Image alt={'home'} src={home}/>
         <h3>Home</h3>
       </NavItem>
-      <NavItem href={''} selected={false}>
+      <NavItem href={logged ? '/avaliar' : '/entrar'} selected={pathName == '/avaliar'}>
         <Image alt={'star'} src={star} />
         <h3>Avaliar</h3>
       </NavItem>
-      <NavItem href={'/entrar'} selected={false}>
+      <NavItem href={logged ? '/perfil' : '/entrar'} selected={pathName == '/perfil'}>
         <Image alt={'user'} src={user} />
         <h3>Perfil</h3>
       </NavItem>
-      <NavItem href={''} selected={false}>
+      <NavItem href={logged ? '/minhas-avaliacoes' : '/entrar'} selected={pathName == '/minhas-avaliacoes'}>
         <Image alt={'bookmark'} src={bookmark} />
         <h3>Minhas Avaliações</h3>
       </NavItem>
       {admin && 
-      <NavItem href={''} selected={false}>
+        <NavItem href={'denuncias'} selected={pathName == '/denuncias'}>
         <Image alt={'alert'} src={alertTriangle} />
         <h3>Denúncias</h3>
       </NavItem>

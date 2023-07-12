@@ -7,9 +7,6 @@ const InputDiv = styled.div`
   flex-direction: column;
   width: 100%;
   gap: 0.5rem;
-  p {
-    font-weight: 600;
-  }
 `;
 
 const Icon = styled(Image)`
@@ -21,15 +18,32 @@ const Icon = styled(Image)`
   width: 1.5rem;
 `;
 
-export default function InputBox({ title, icon, children }) {
+const HeaderDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  p {
+    font-size: .8rem;
+  }
+
+`;
+
+const ErrorText = styled.p`
+  font-size: 1rem;
+  font-weight: 400;
+`;
+
+export default function InputBox({ title, icon, errorMessage, children }) {
+
   return (
-  <>
     <InputDiv>
-      <p>{title}</p>
+      <HeaderDiv>
+        <label>{title}</label>
+        {errorMessage && <p>{errorMessage.message}</p>}
+      </HeaderDiv>
       <Icon alt={icon.src} src={icon} />
       {children}
     </InputDiv>
-  </>
   );
 }
   

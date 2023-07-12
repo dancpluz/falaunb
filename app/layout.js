@@ -31,7 +31,18 @@ const GlobalStyle = createGlobalStyle`
     flex-grow: 1;
     border-radius: 0.5rem;
     border: 3px solid ${({ theme }) => theme.colors.dark};
-    padding-left: 2.75rem;
+    padding-left: 3rem;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  }
+ 
+  input[type=number] {
+    appearance: textfield;
+    -moz-appearance: textfield;
   }
 
   button {
@@ -46,12 +57,18 @@ const GlobalStyle = createGlobalStyle`
     cursor: pointer;
   }
 
+  label {
+    font-size: 1rem;
+    font-weight: 600;
+    flex-grow: 1;
+  }
+
   div {
     border-radius: 1.25rem;
   }
 
   h1 {
-    font-size: 2.25rem;;
+    font-size: 2.25rem;
     font-weight: 700;
   }
 
@@ -72,7 +89,7 @@ const GlobalStyle = createGlobalStyle`
 
   p {
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 400;
   }
 `;
 
