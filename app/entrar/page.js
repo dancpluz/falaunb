@@ -6,9 +6,8 @@ import Link from 'next/link'
 import InputBox from '@/components/InputBox';
 import user from '../../assets/user.svg';
 import lock from '../../assets/lock.svg';
-import supabase from '../../utils/supabase.js';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useAuthContext } from '../../context/AuthContext';
 
 
 const Container = styled.div`
@@ -49,44 +48,8 @@ const StyledLink = styled(Link)`
 
 export default function Entrar() {
   const { handleSubmit,register,formState: { errors } } = useForm();
-  const [loginError,setLoginError] = useState('');
-
-  const onSubmit = async (data) => {
-    const { matricula, senha } = data;
-
-    try {
-      const { data: users,error } = await supabase
-        .from('estudante')
-        .select('*')
-        .eq('matricula',matricula);
-
-      if (error) {
-        console.error('Database error:',error);
-        // Handle error, display error message, etc.
-        return;
-      }
-
-      if (users.length === 0) {
-        setLoginError('Matrícula não existe');
-        return;
-      }
-
-      const user = users[0];
-
-      if (user.senha !== senha) {
-        setLoginError('Senha errada');
-        return;
-      }
-
-      // Login successful, proceed with authentication logic
-      console.log('Login successful:',user);
-      // Redirect to the authenticated page, etc.
-    } catch (error) {
-      console.error('Login error:',error.message);
-      // Handle error, display error message, etc.
-    }
-  };
-
+  
+  const { loginError, onLogin } = useAuthContext();
 
   return (
     <Container>
@@ -97,7 +60,7 @@ export default function Entrar() {
           <h4>Entre para fazer avaliações</h4>
         </HeaderDiv>
       
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onLogin)}>
           <InputBox title={'Matrícula'} errorMessage={errors.matricula} icon={user}>
             <input
               type='number'
@@ -112,7 +75,7 @@ export default function Entrar() {
           <InputBox title={'Senha'} errorMessage={errors.senha} icon={lock}>
             <input
               type='password'
-              {...register('senha',{ required: true })}
+              {...register('senha',{ required: '(Campo obrigatório)' })}
             />
           </InputBox>
           {loginError && <p>{loginError}</p>}

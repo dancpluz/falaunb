@@ -7,6 +7,7 @@ import user from '../assets/user.svg';
 import bookmark from '../assets/bookmark.svg';
 import alertTriangle from '../assets/alert-triangle.svg';
 import { usePathname } from 'next/navigation'
+import { useAuthContext } from '../context/AuthContext';
 
 const Nav = styled.nav`
   display: flex;
@@ -38,8 +39,8 @@ const NavItem = styled(Link)`
 `;
 
 export default function NavBar() {
-  const admin = false;
-  const logged = false;
+  const { isLogged, isAdmin } = useAuthContext();
+
   const pathName = usePathname();
 
   return (
@@ -48,19 +49,19 @@ export default function NavBar() {
         <Image alt={'home'} src={home}/>
         <h3>Home</h3>
       </NavItem>
-      <NavItem href={logged ? '/avaliar' : '/entrar'} selected={pathName == '/avaliar'}>
+      <NavItem href={isLogged ? '/avaliar' : '/entrar'} selected={pathName == '/avaliar'}>
         <Image alt={'star'} src={star} />
         <h3>Avaliar</h3>
       </NavItem>
-      <NavItem href={logged ? '/perfil' : '/entrar'} selected={pathName == '/perfil'}>
+      <NavItem href={isLogged ? '/perfil' : '/entrar'} selected={pathName == '/perfil'}>
         <Image alt={'user'} src={user} />
         <h3>Perfil</h3>
       </NavItem>
-      <NavItem href={logged ? '/minhas-avaliacoes' : '/entrar'} selected={pathName == '/minhas-avaliacoes'}>
+      <NavItem href={isLogged ? '/minhas-avaliacoes' : '/entrar'} selected={pathName == '/minhas-avaliacoes'}>
         <Image alt={'bookmark'} src={bookmark} />
         <h3>Minhas Avaliações</h3>
       </NavItem>
-      {admin && 
+      {isAdmin && 
         <NavItem href={'denuncias'} selected={pathName == '/denuncias'}>
         <Image alt={'alert'} src={alertTriangle} />
         <h3>Denúncias</h3>

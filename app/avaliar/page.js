@@ -10,11 +10,11 @@ const Container = styled.div`
   gap: 2rem;
 `;
 
-export default function Home() {
+export default function Avaliar() {
   return (
     <Container>
-      <Header home/>
-      
+      <Header />
+
     </Container>
   )
 }

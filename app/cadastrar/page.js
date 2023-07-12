@@ -1,7 +1,6 @@
 'use client'
 import styled from 'styled-components';
 import Image from 'next/image';
-import logoBig from '../../assets/logoBig.svg'
 import Link from 'next/link'
 import InputBox from '@/components/InputBox';
 import user from '../../assets/user.svg';
@@ -12,6 +11,7 @@ import smile from '../../assets/smile.svg';
 import supabase from '../../utils/supabase.js';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import Select from 'react-select';
 
 
 const Container = styled.div`
@@ -54,6 +54,18 @@ const StyledLink = styled(Link)`
   text-decoration: none;
   color: ${({ theme }) => theme.colors.yellow};
 `;
+
+const selectStyles = {
+  control: styles => ({ ...styles,backgroundColor: 'white' }),
+  option: (styles,{ data,isDisabled,isFocused,isSelected }) => {
+    return {
+      ...styles,
+      backgroundColor: 'black',
+      color: '#FFF',
+      cursor: isDisabled ? 'not-allowed' : 'default',
+    };
+  },
+};
 
 export default function Cadastrar() {
   const { handleSubmit,register,formState: { errors } } = useForm();
@@ -100,8 +112,14 @@ export default function Cadastrar() {
             />
           </InputBox>
 
-          {///////SELECT/////////
-          }
+          <InputBox title={'Curso/Departamento'} errorMessage={errors.departamento} icon={book}>
+            <Select 
+              placeholder={''}
+              styles={selectStyles}
+              options={[{ value: "blues",label: "Blues" }]}
+              {...register('departamento',{ required: '(Campo obrigatório)' })}>
+            </Select>
+          </InputBox>
 
           <InputBox title={'Senha'} errorMessage={errors.senha} icon={lock}>
             <input
