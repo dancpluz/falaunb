@@ -6,7 +6,7 @@ import { formatDate } from '@/utils/formatting';
 
 const Container = styled.div`
   display: flex;
-  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  padding: 1.5rem;
   flex-direction: column;
   gap: 1rem;
   border-radius: 0.625rem;

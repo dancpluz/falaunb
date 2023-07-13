@@ -107,7 +107,7 @@ const MainDiv = styled.div`
   margin-left: 26rem;
   border-radius: 0;
   background: linear-gradient(180deg, #FAF5EC 5.60%, #FCD58D 81.63%);
-  height: 100vh;
+  min-height: 100vh;
 `;
 
 const theme = {

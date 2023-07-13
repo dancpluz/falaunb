@@ -53,7 +53,7 @@ export const StarDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   align-self: stretch;
 `;
 

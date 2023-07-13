@@ -16,6 +16,14 @@ const Container = styled.div`
   gap: 2rem;
 `;
 
+const Modal = styled.div`
+  display: flex;
+  padding: 2rem;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: ${({ theme }) => theme.colors.light};
+`;
+
 export default function Home() {
   //const { departments,fetchDepartments,selectedDepartment,setSelectedDepartment } = useHomeContext();
 
@@ -24,19 +32,30 @@ export default function Home() {
 
 
   useEffect(() => {
-    const fetchLatestReview = async () => {
+    const fetchReviews = async () => {
       const { data } = await supabase
         .from("avaliacao")
         .select(`*, cod_turma(turma, cod_disciplina(nome)), mat_estudante(nome)`)
         .order("codigo",{ ascending: false });
 
-      data
+      // Faz um objeto com os professores como chaves e um Array com suas reviews
 
-      console.log(data[0])
+      const teachers = data.reduce((result, obj) => {
+        const { nome_professor, ...rest } = obj;
+        if (!result[nome_professor]) {
+          result[nome_professor] = [rest];
+        } else {
+          result[nome_professor].push(rest);
+        }
+        return result;
+      }, {});
+
+      console.log(teachers);
+      setReviews(teachers)
       setIsLoading(false)
     }
 
-    fetchLatestReview()
+    fetchReviews()
   },[])
 
   if (isLoading) {
@@ -54,7 +73,23 @@ export default function Home() {
       {
         //<SelectDepartment />
       }
-      <ReviewCard />
+      <Modal>
+        {Object.keys(reviews).map((key) => {
+        return renderCards(key, reviews[key])
+          })
+        }
+      </Modal>
     </Container>
+  )
+}
+
+export function renderCards(title, reviews) {
+  return (
+    <>
+      <h3>Prof. {title}</h3>
+      {reviews.map((review) => {
+        return (<ReviewCard key={review.codigo} review={review}/>)
+      })}
+    </>
   )
 }

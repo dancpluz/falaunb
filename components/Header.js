@@ -8,9 +8,8 @@ import { useAuthContext } from '../context/AuthContext';
 
 const Container = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: ${props => props.hasButton ? "space-between" : "flex-end"};
   align-items: center;
-  align-self: stretch;
 `;
 
 const AddButton = styled(Link)`
@@ -49,7 +48,7 @@ export default function Header({ home }) {
 
   if (isLogged) {
     return (
-      <Container>
+      <Container hasButton={home}>
         {home &&
           <AddButton href={'avaliar'}>
             <h2>Avaliar</h2>
@@ -69,7 +68,7 @@ export default function Header({ home }) {
   } 
 
   return (
-    <Container>
+    <Container hasButton={home}>
       {home &&
         <AddButton href={'avaliar'}>
           <h2>Avaliar</h2>
