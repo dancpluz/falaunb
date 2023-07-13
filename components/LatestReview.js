@@ -3,7 +3,7 @@ import Image from 'next/image'
 import trending from '../assets/trending-up.svg';
 import Stars from './Stars';
 import { useEffect, useState } from 'react';
-import supabase from '../utils/supabase.js'
+import supabase from '../utils/supabase.js';
 import { formatDate,formatInitials,formatTeacherName } from '@/utils/formatting';
 
 
@@ -49,7 +49,7 @@ const RatingHeader = styled.header`
   }
 `;
 
-const StarDiv = styled.div`
+export const StarDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

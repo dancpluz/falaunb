@@ -2,7 +2,8 @@
 
 import styled from 'styled-components';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
-import { AuthProvider } from '../context/AuthContext'
+import { AuthProvider } from '../context/AuthContext';
+import { DataProvider } from '../context/HomeContext';
 import { Montserrat } from 'next/font/google';
 import SideBar from '@/components/SideBar';
 
@@ -26,7 +27,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Montserrat', sans-serif;
   }
 
-  input, select {
+  input, select, textarea {
     appearance: none;
     height: 3rem;
     font-size: 1rem;
@@ -35,6 +36,7 @@ const GlobalStyle = createGlobalStyle`
     border: 3px solid ${({ theme }) => theme.colors.dark};
     padding-left: 3rem;
     color: ${({ theme }) => theme.colors.dark};
+
   }
 
   input::-webkit-outer-spin-button,
@@ -46,6 +48,11 @@ const GlobalStyle = createGlobalStyle`
   input[type=number] {
     appearance: textfield;
     -moz-appearance: textfield;
+  }
+
+  textarea {
+    height: 6rem;
+    padding: 1rem;
   }
 
   button {
@@ -118,7 +125,8 @@ export default function RootLayout({ children }) {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-        <AuthProvider>
+      <AuthProvider>
+        <DataProvider>
           <html lang="en">
             <body className={montserrat.className}>
               <SideBar />
@@ -127,6 +135,7 @@ export default function RootLayout({ children }) {
               </MainDiv>
             </body>
           </html>
+        </DataProvider>
       </AuthProvider>
     </ThemeProvider>
   )

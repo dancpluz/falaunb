@@ -29,6 +29,14 @@ const AddButton = styled(Link)`
     }
 `;
 
+const AdminLabel = styled.div`
+  display: flex;
+  padding: 0.5rem 1rem;
+  align-items: center;
+  border-radius: 2.5rem;
+  border: 3px solid ${({ theme }) => theme.colors.dark};
+`;
+
 const LoginDiv = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -37,7 +45,7 @@ const LoginDiv = styled.div`
 `;
 
 export default function Header({ home }) {
-  const { isLogged, userData } = useAuthContext();
+  const { isLogged, isAdmin, userData } = useAuthContext();
 
   if (isLogged) {
     return (
@@ -48,6 +56,9 @@ export default function Header({ home }) {
             <Image alt={'add'} src={plus} />
           </AddButton>}
         <LoginDiv>
+          {isAdmin &&
+            <AdminLabel><h3>ADMIN</h3></AdminLabel>
+          }
           <h3>{`Olá, ${userData.nome}`}</h3>
           <Link href={''}>
             <Image alt={'logout'} src={logout} />

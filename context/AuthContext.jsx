@@ -5,16 +5,14 @@ import { useRouter } from 'next/navigation';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isLogged,setIsLogged] = useState(false);
+  const [isLogged,setIsLogged] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({nome: 'Teste'});
   const [loginError,setLoginError] = useState('');
   const router = useRouter();
 
   const onLogin = async (input) => {
     const { matricula,senha } = input;
-    
-
     try {
       const { data: users,error } = await supabase
         .from('estudante')

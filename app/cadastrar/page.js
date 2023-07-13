@@ -74,7 +74,6 @@ export default function Cadastrar() {
   const onSubmit = async (data) => {
     const { matricula,senha } = data;
 
-  
   };
 
 

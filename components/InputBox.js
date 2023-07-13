@@ -25,7 +25,6 @@ const HeaderDiv = styled.div`
   p {
     font-size: .8rem;
   }
-
 `;
 
 const ErrorText = styled.p`
@@ -41,7 +40,7 @@ export default function InputBox({ title, icon, errorMessage, children }) {
         <label>{title}</label>
         {errorMessage && <p>{errorMessage.message}</p>}
       </HeaderDiv>
-      <Icon alt={icon.src} src={icon} />
+      {icon && <Icon alt={icon.src} src={icon} />}
       {children}
     </InputDiv>
   );
