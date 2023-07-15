@@ -30,7 +30,6 @@ export default function Home() {
   const [reviews,setReviews] = useState(null);
   const [isLoading,setIsLoading] = useState(true);
 
-
   useEffect(() => {
     const fetchReviews = async () => {
       const { data } = await supabase
@@ -50,7 +49,6 @@ export default function Home() {
         return result;
       }, {});
 
-      console.log(teachers);
       setReviews(teachers)
       setIsLoading(false)
     }
@@ -83,7 +81,7 @@ export default function Home() {
   )
 }
 
-export function renderCards(title, reviews) {
+function renderCards(title, reviews) {
   return (
     <>
       <h3>Prof. {title}</h3>

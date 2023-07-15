@@ -6,7 +6,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLogged,setIsLogged] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
   const [userData, setUserData] = useState({nome: 'Teste'});
   const [loginError,setLoginError] = useState('');
   const router = useRouter();
@@ -50,6 +50,37 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const onLogout = async (input) => {
+    setIsLogged(false);
+    setIsAdmin(false);
+    setUserData(null);
+  }
+
+  const OnSignUp = async (input) => {
+    try {
+      console.log(input)
+      const { data,error } = await supabase
+        .from('estudante')
+        .insert(input)
+        .select()
+
+      if (error) {
+        console.error('Database error:',error);
+        // Handle error, display error message, etc.
+        return;
+      }
+
+      // Login successful, proceed with authentication logic
+      console.log('Login successful:',data);
+      
+      router.push("/entrar")
+      // Redirect to the authenticated page, etc.
+    } catch (error) {
+      console.error('Login error:',error.message);
+      // Handle error, display error message, etc.
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -61,7 +92,9 @@ export const AuthProvider = ({ children }) => {
         setUserData,
         loginError,
         setLoginError,
-        onLogin
+        onLogin,
+        onLogout,
+        OnSignUp
       }}
     >
       {children}

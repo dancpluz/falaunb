@@ -57,17 +57,7 @@ export const StarDiv = styled.div`
   align-self: stretch;
 `;
 
-export default function LatestReview() {
-  const a = {
-    'professor': 'FABRICIO ATAIDES BRAZ',
-    'disciplina': 'APC',
-    'turma': '01',
-    'avaliador': 'Juan Pablo',
-    'texto': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis euismod viverra finibus. Praesent sit amet lorem dui. Proin lobortis viverra turpis ac finibus.Lorem ipsum dolor sit amet',
-    'nota': 4,
-    'data': '07/07/2023'
-  }
-  
+export default function LatestReview() {  
   const [latestReview, setLatestReview] = useState(null)
   const [isLoading,setIsLoading] = useState(true)
 

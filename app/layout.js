@@ -27,7 +27,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Montserrat', sans-serif;
   }
 
-  input, select, textarea {
+  input, textarea {
     appearance: none;
     height: 3rem;
     font-size: 1rem;

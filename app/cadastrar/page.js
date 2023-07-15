@@ -1,6 +1,5 @@
 'use client'
 import styled from 'styled-components';
-import Image from 'next/image';
 import Link from 'next/link'
 import InputBox from '@/components/InputBox';
 import user from '../../assets/user.svg';
@@ -8,10 +7,11 @@ import lock from '../../assets/lock.svg';
 import book from '../../assets/book.svg';
 import mail from '../../assets/mail.svg';
 import smile from '../../assets/smile.svg';
-import supabase from '../../utils/supabase.js';
-import { useForm } from 'react-hook-form';
-import { useState } from 'react';
-import Select from 'react-select';
+import { useForm, Controller } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import SelectBox from '@/components/SelectBox';
+import { fetchDepartments } from '../../utils/fetchFunctions';
+import { useAuthContext } from '../../context/AuthContext';
 
 
 const Container = styled.div`
@@ -55,26 +55,38 @@ const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.colors.yellow};
 `;
 
-const selectStyles = {
-  control: styles => ({ ...styles,backgroundColor: 'white' }),
-  option: (styles,{ data,isDisabled,isFocused,isSelected }) => {
-    return {
-      ...styles,
-      backgroundColor: 'black',
-      color: '#FFF',
-      cursor: isDisabled ? 'not-allowed' : 'default',
-    };
-  },
-};
-
 export default function Cadastrar() {
-  const { handleSubmit,register,formState: { errors } } = useForm();
+  const { handleSubmit,register,control,formState: { errors } } = useForm();
+  const [departmentOptions, setDepartmentOptions] = useState([]);
   const [loginError,setLoginError] = useState('');
+  const { OnSignUp } = useAuthContext();
+  const onSubmit = data => console.log(data);
 
-  const onSubmit = async (data) => {
-    const { matricula,senha } = data;
+  useEffect(() => {
+    const fetchDepartmentOptions = async () => {
+      setDepartmentOptions(await fetchDepartments());
+    };
+    console.log(loginError)
 
-  };
+    fetchDepartmentOptions();
+  },[]);
+
+  function SelectBoxWrapper({ control,name,options }) {
+    return (
+      <Controller
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <SelectBox
+            {...field}
+            options={options}
+          />
+        )}
+      />
+    );
+  }
+
+  
 
 
   return (
@@ -112,12 +124,11 @@ export default function Cadastrar() {
           </InputBox>
 
           <InputBox title={'Curso/Departamento'} errorMessage={errors.departamento} icon={book}>
-            <Select 
-              placeholder={''}
-              styles={selectStyles}
-              options={[{ value: "blues",label: "Blues" }]}
-              {...register('departamento',{ required: '(Campo obrigatório)' })}>
-            </Select>
+            <SelectBoxWrapper
+              control={control}
+              name="departamento"
+              options={departmentOptions}
+            />
           </InputBox>
 
           <InputBox title={'Senha'} errorMessage={errors.senha} icon={lock}>
@@ -134,7 +145,8 @@ export default function Cadastrar() {
             />
           </InputBox>
 
-          {loginError && <ErrorText>{loginError}</ErrorText>}
+          {//loginError && <ErrorText>{loginError}</ErrorText>
+          }
           <button>Cadastrar-se</button>
         </form>
 

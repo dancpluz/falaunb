@@ -48,7 +48,6 @@ const StyledLink = styled(Link)`
 
 export default function Entrar() {
   const { handleSubmit,register,formState: { errors } } = useForm();
-  
   const { loginError, onLogin } = useAuthContext();
 
   return (

@@ -44,7 +44,7 @@ const LoginDiv = styled.div`
 `;
 
 export default function Header({ home }) {
-  const { isLogged, isAdmin, userData } = useAuthContext();
+  const { isLogged, isAdmin, userData, onLogout } = useAuthContext();
 
   if (isLogged) {
     return (
@@ -59,7 +59,7 @@ export default function Header({ home }) {
             <AdminLabel><h3>ADMIN</h3></AdminLabel>
           }
           <h3>{`Olá, ${userData.nome}`}</h3>
-          <Link href={''}>
+          <Link onClick={onLogout} href={'/'}>
             <Image alt={'logout'} src={logout} />
           </Link>
         </LoginDiv>

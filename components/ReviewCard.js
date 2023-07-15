@@ -39,8 +39,6 @@ const ButtonsDiv = styled.div`
   gap: 0.625rem;
 `;
 
-
-
 export default function ReviewCard({ review }) {
   const { cod_turma,data,mat_estudante,nota,texto } = review;
 

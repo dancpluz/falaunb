@@ -54,3 +54,8 @@ export function formatInitials(string) {
 
   return result;
 }
+
+export function formatDepartment(string) {
+  //WIP
+  return string
+}

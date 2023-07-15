@@ -8,11 +8,14 @@ import book from '../../assets/book.svg';
 import classroom from '../../assets/classroom.svg';
 import briefcase from '../../assets/briefcase.svg';
 import teacher from '../../assets/teacher.svg';
-import Select from 'react-select';
+import SelectBox from 'react-select';
 import { Rating } from '@smastrom/react-rating';
 import '@smastrom/react-rating/style.css';
 import Stars, { customStyles } from '@/components/Stars';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useHomeContext } from '../../context/HomeContext';
+import supabase from '../../utils/supabase.js';
+import { fetchDepartmentOptions } from '../../utils/fetchFunctions';
 
 
 
@@ -44,6 +47,8 @@ const BoxesDiv = styled.div`
   align-items: center;
   gap: 1rem;
   align-self: stretch;
+  flex-grow: 1;
+  z-index: 3;
 `;
 
 const InsideDiv = styled.div`
@@ -52,54 +57,68 @@ const InsideDiv = styled.div`
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  flex-grow: 1;
+  width: 100%;
 `;
 
-const BigInput = styled.input`
-  height: 6rem;
-`;
+
 
 export default function Avaliar() {
   const { handleSubmit,register,formState: { errors } } = useForm();
+  const [departmentsOptions, setDepartmentsOptions] = useState(['']);
   const [rating,setRating] = useState(0);
+
+
+  useEffect(() => {
+    const deptOptions = fetchDepartmentOptions()
+
+  }, [])
+  
 
   return (
     <Container>
       <Header />
       <Modal>
         <h2>Preencha os dados para fazer sua Avaliação:</h2>
-        <form onSubmit={''}>
+        <form onSubmit={handleSubmit}>
           <BoxesDiv>
             <InsideDiv>
               <InputBox title={'Departamento'} errorMessage={errors.departamento} icon={briefcase}>
                 <Select
+                  unstyled
+                  styles={selectStyles}
                   placeholder={''}
-                  options={[]}
-                  {...register('departamento',{ required: '(Campo obrigatório)' })}>
-                </Select>
+                  options={departmentsOptions}
+                  noOptionsMessage={({inputValue})=> !inputValue? noOptionsText: 'Não encontrado'}
+                  {...register('departamento',{ required: '(Campo obrigatório)' })}/>
+
               </InputBox>
               <InputBox title={'Professor(a)'} errorMessage={errors.professor} icon={teacher}>
                 <Select
+                  unstyled
+                  styles={selectStyles}
                   placeholder={''}
                   options={[]}
-                  {...register('professor',{ required: '(Campo obrigatório)' })}>
-                </Select>
+                  {...register('professor',{ required: '(Campo obrigatório)' })}/>
+
               </InputBox>
             </InsideDiv>
             <InsideDiv>
               <InputBox title={'Disciplina'} errorMessage={errors.disciplina} icon={book}>
                 <Select
+                  unstyled
+                  styles={selectStyles}
                   placeholder={''}
                   options={[]}
-                  {...register('disciplina')}>
-                </Select>
+                  {...register('disciplina')}/>
+
               </InputBox>
               <InputBox title={'Turma'} errorMessage={errors.turma} icon={classroom}>
                 <Select
+                  unstyled
+                  styles={selectStyles}
                   placeholder={''}
                   options={[]}
-                  {...register('turma')}>
-                </Select>
+                  {...register('turma')}/>
               </InputBox>
             </InsideDiv>
             
