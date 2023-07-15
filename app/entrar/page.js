@@ -1,4 +1,5 @@
 'use client'
+
 import styled from 'styled-components';
 import Image from 'next/image';
 import logoBig from '../../assets/logoBig.svg'
@@ -8,7 +9,6 @@ import user from '../../assets/user.svg';
 import lock from '../../assets/lock.svg';
 import { useForm } from 'react-hook-form';
 import { useAuthContext } from '../../context/AuthContext';
-
 
 const Container = styled.div`
   display: flex;
@@ -77,6 +77,7 @@ export default function Entrar() {
               {...register('senha',{ required: '(Campo obrigatório)' })}
             />
           </InputBox>
+
           {loginError && <p>{loginError}</p>}
           <button>Entrar</button>
         </form>

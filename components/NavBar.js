@@ -14,7 +14,7 @@ const Nav = styled.nav`
   padding: 1rem;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.625rem;
+  gap: 0.25rem;
   align-self: stretch;
   border-radius: 1.25rem;
   background: ${({ theme }) => theme.colors.light};

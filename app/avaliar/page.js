@@ -8,16 +8,13 @@ import book from '../../assets/book.svg';
 import classroom from '../../assets/classroom.svg';
 import briefcase from '../../assets/briefcase.svg';
 import teacher from '../../assets/teacher.svg';
-import SelectBox from 'react-select';
-import { Rating } from '@smastrom/react-rating';
 import '@smastrom/react-rating/style.css';
-import Stars, { customStyles } from '@/components/Stars';
+import Stars from '@/components/Stars';
 import { useEffect, useState } from 'react';
-import { useHomeContext } from '../../context/HomeContext';
-import supabase from '../../utils/supabase.js';
-import { fetchDepartmentOptions } from '../../utils/fetchFunctions';
-
-
+import SelectBox from '@/components/SelectBox';
+import ReviewCard from '@/components/ReviewCard';
+import { useAuthContext } from '../../context/AuthContext';
+import { fetchDepartments,fetchTeachers } from '../../utils/fetchFunctions';
 
 const Container = styled.div`
   display: flex;
@@ -48,7 +45,6 @@ const BoxesDiv = styled.div`
   gap: 1rem;
   align-self: stretch;
   flex-grow: 1;
-  z-index: 3;
 `;
 
 const InsideDiv = styled.div`
@@ -60,19 +56,49 @@ const InsideDiv = styled.div`
   width: 100%;
 `;
 
+const StarDiv = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1 0 0;
+`;
 
+const CheckDiv = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 2rem;
+  flex: 1 0 0;
+`;
 
 export default function Avaliar() {
-  const { handleSubmit,register,formState: { errors } } = useForm();
-  const [departmentsOptions, setDepartmentsOptions] = useState(['']);
+  const { handleSubmit,getValues,register,control,formState: { errors } } = useForm();
+  const { userData } = useAuthContext();
+
+  const [departmentOptions,setDepartmentOptions] = useState([]);
+  const [teacherOptions, setTeacherOptions] = useState([]);
+  const [subjectOptions, setSubjectOptions] = useState([]);
+  const [classroomOptions, setClassroomOptions] = useState([]);
+  const [text, setText] = useState('');
+  const [classRoom, setClassRoom] = useState(null);
+
+  const [anonymous, setAnonymous] = useState(false)
   const [rating,setRating] = useState(0);
 
 
-  useEffect(() => {
-    const deptOptions = fetchDepartmentOptions()
 
-  }, [])
-  
+  useEffect(() => {
+    const fetchDepartmentOptions = async () => {
+      setDepartmentOptions(await fetchDepartments());
+    };
+
+    fetchDepartmentOptions();
+  },[]);
+
+  const handleFetchTeachers = async (input) => {
+    console.log(input)
+    setTeacherOptions(await fetchTeachers(input))
+  }
 
   return (
     <Container>
@@ -83,52 +109,53 @@ export default function Avaliar() {
           <BoxesDiv>
             <InsideDiv>
               <InputBox title={'Departamento'} errorMessage={errors.departamento} icon={briefcase}>
-                <Select
-                  unstyled
-                  styles={selectStyles}
-                  placeholder={''}
-                  options={departmentsOptions}
-                  noOptionsMessage={({inputValue})=> !inputValue? noOptionsText: 'Não encontrado'}
-                  {...register('departamento',{ required: '(Campo obrigatório)' })}/>
-
+                <SelectBox
+                  control={control}
+                  name='departamento'
+                  options={departmentOptions}
+                  onChange={() => handleFetchTeachers(selectedOption)}
+                />
               </InputBox>
-              <InputBox title={'Professor(a)'} errorMessage={errors.professor} icon={teacher}>
-                <Select
-                  unstyled
-                  styles={selectStyles}
-                  placeholder={''}
-                  options={[]}
-                  {...register('professor',{ required: '(Campo obrigatório)' })}/>
-
+              <InputBox title={'Disciplina'} errorMessage={errors.disciplina} icon={book}>
+                <SelectBox
+                  control={control}
+                  name='disciplina'
+                  options={subjectOptions}
+                />
               </InputBox>
             </InsideDiv>
             <InsideDiv>
-              <InputBox title={'Disciplina'} errorMessage={errors.disciplina} icon={book}>
-                <Select
-                  unstyled
-                  styles={selectStyles}
-                  placeholder={''}
-                  options={[]}
-                  {...register('disciplina')}/>
-
+              <InputBox title={'Professor(a)'} errorMessage={errors.professor} icon={teacher}>
+                <SelectBox
+                  control={control}
+                  name='professor'
+                  options={teacherOptions}
+                />
               </InputBox>
               <InputBox title={'Turma'} errorMessage={errors.turma} icon={classroom}>
-                <Select
-                  unstyled
-                  styles={selectStyles}
-                  placeholder={''}
-                  options={[]}
-                  {...register('turma')}/>
+                <SelectBox
+                  control={control}
+                  name='turma'
+                  options={classroomOptions}
+                />
               </InputBox>
             </InsideDiv>
-            
           </BoxesDiv>
-          <InputBox title={'Fale sobre este(a) professor(a):'} errorMessage={errors.avaliacao}>
-            <textarea {...register('avaliacao',{ required: '(Campo obrigatório)' })}/>
+          <InputBox title={'Fale sobre este(a) professor(a):'} errorMessage={errors.texto}>
+            <textarea {...register('texto',{ onChange: (e) => setText(e.target.value), required: '(Campo obrigatório)' })}/>
           </InputBox>
-
-          <Stars rating={rating} setRating={setRating} />
-
+          <BoxesDiv>
+            <StarDiv>
+              <h3>Nota:</h3>
+              <Stars rating={rating} setRating={setRating} />
+            </StarDiv>
+            <CheckDiv>
+              <h3>Anônimo:</h3>
+              <input type='checkbox' onChange={() => setAnonymous(!anonymous)} />
+            </CheckDiv>
+          </BoxesDiv>
+          <h4>Sua avaliação ficará assim:</h4>
+          <ReviewCard review={{ mat_estudante: (anonymous ? null : userData),nota: rating,texto: (text == '' ? '(Texto)' : text) }} />
           <button>Enviar</button>
         </form>
       </Modal>

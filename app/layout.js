@@ -36,8 +36,14 @@ const GlobalStyle = createGlobalStyle`
     border: 3px solid ${({ theme }) => theme.colors.dark};
     padding-left: 3rem;
     color: ${({ theme }) => theme.colors.dark};
-
   }
+
+  textarea {
+    height: 6rem;
+    padding: 1rem;
+    resize: none;
+  }
+
 
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
@@ -50,11 +56,33 @@ const GlobalStyle = createGlobalStyle`
     -moz-appearance: textfield;
   }
 
-  textarea {
-    height: 6rem;
-    padding: 1rem;
+  input[type=checkbox] {
+    border-radius: 0.5rem;
+    border: 3px solid ${({ theme }) => theme.colors.dark};
+    height: 2rem;
+    width: 2rem;
+    flex-grow: 0;
+    padding: 0;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
   }
 
+  input[type=checkbox]::before {
+    content: "";
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.2rem;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1rem 1rem ${({ theme }) => theme.colors.dark};
+  }
+
+  input[type="checkbox"]:checked::before {
+    transform: scale(1);
+  }
+
+  
   button {
     height: 3.5rem;
     border-radius: 0.625rem;
@@ -100,6 +128,7 @@ const GlobalStyle = createGlobalStyle`
   p {
     font-size: 1rem;
     font-weight: 400;
+    word-wrap: break-word;
   }
 `;
 

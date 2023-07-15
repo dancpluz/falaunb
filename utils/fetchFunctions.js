@@ -26,3 +26,26 @@ export const fetchDepartments = async () => {
   }
 };
 
+export const fetchTeachers = async (input) => {
+  try {
+    const { data,error } = await supabase
+      .from('professor')
+      .select('nome')
+      .eq('cod_departamento',input)
+
+    if (error) {
+      throw new Error('Failed to fetch teacher options');
+    }
+
+    const optionsArray = data.map((obj) => ({
+      value: input,
+      label: obj.nome,
+    }));
+
+    console.log('Teachers Fetched:',optionsArray);
+    return optionsArray;
+  } catch (error) {
+    console.error('Error fetching teacher options:',error.message);
+    return [];
+  }
+};

@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(true);
   const [userData, setUserData] = useState({nome: 'Teste'});
   const [loginError,setLoginError] = useState('');
+  //const [signUpError, setSignUpError] = useState('')
   const router = useRouter();
 
   const onLogin = async (input) => {
@@ -56,12 +57,14 @@ export const AuthProvider = ({ children }) => {
     setUserData(null);
   }
 
-  const OnSignUp = async (input) => {
+  const onSignUp = async (input) => {
     try {
-      console.log(input)
+      const userData = {...input, cod_departamento: input.departamento.value}
+      delete userData.departamento
+      console.log(userData)
       const { data,error } = await supabase
         .from('estudante')
-        .insert(input)
+        .insert(userData,{ defaultToNull: true })
         .select()
 
       if (error) {
@@ -90,11 +93,9 @@ export const AuthProvider = ({ children }) => {
         setIsAdmin,
         userData,
         setUserData,
-        loginError,
-        setLoginError,
         onLogin,
         onLogout,
-        OnSignUp
+        onSignUp
       }}
     >
       {children}

@@ -7,7 +7,7 @@ import lock from '../../assets/lock.svg';
 import book from '../../assets/book.svg';
 import mail from '../../assets/mail.svg';
 import smile from '../../assets/smile.svg';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import SelectBox from '@/components/SelectBox';
 import { fetchDepartments } from '../../utils/fetchFunctions';
@@ -58,36 +58,17 @@ const StyledLink = styled(Link)`
 export default function Cadastrar() {
   const { handleSubmit,register,control,formState: { errors } } = useForm();
   const [departmentOptions, setDepartmentOptions] = useState([]);
-  const [loginError,setLoginError] = useState('');
-  const { OnSignUp } = useAuthContext();
+  //const [signUpError,setSignUpError] = useState('');
+  const { onSignUp } = useAuthContext();
   const onSubmit = data => console.log(data);
 
   useEffect(() => {
     const fetchDepartmentOptions = async () => {
       setDepartmentOptions(await fetchDepartments());
     };
-    console.log(loginError)
 
     fetchDepartmentOptions();
   },[]);
-
-  function SelectBoxWrapper({ control,name,options }) {
-    return (
-      <Controller
-        control={control}
-        name={name}
-        render={({ field }) => (
-          <SelectBox
-            {...field}
-            options={options}
-          />
-        )}
-      />
-    );
-  }
-
-  
-
 
   return (
     <Container>
@@ -97,7 +78,7 @@ export default function Cadastrar() {
           <h4>Coloque suas informações</h4>
         </HeaderDiv>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSignUp)}>
           <InputBox title={'Matrícula'} errorMessage={errors.matricula} icon={user}>
             <input
               type='number'
@@ -124,9 +105,9 @@ export default function Cadastrar() {
           </InputBox>
 
           <InputBox title={'Curso/Departamento'} errorMessage={errors.departamento} icon={book}>
-            <SelectBoxWrapper
+            <SelectBox
               control={control}
-              name="departamento"
+              name='departamento'
               options={departmentOptions}
             />
           </InputBox>
@@ -138,12 +119,7 @@ export default function Cadastrar() {
             />
           </InputBox>
 
-          <InputBox title={'Confirmar senha'} errorMessage={errors.confirmar} icon={lock}>
-            <input
-              type='password'
-              {...register('confirmar',{ required: '(Campo obrigatório)' })}
-            />
-          </InputBox>
+          
 
           {//loginError && <ErrorText>{loginError}</ErrorText>
           }

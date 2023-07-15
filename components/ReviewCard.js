@@ -41,6 +41,9 @@ const ButtonsDiv = styled.div`
 
 export default function ReviewCard({ review }) {
   const { cod_turma,data,mat_estudante,nota,texto } = review;
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed);
+
 
   return (
     <Container>
@@ -51,7 +54,7 @@ export default function ReviewCard({ review }) {
           }
           <h4>{mat_estudante ? mat_estudante.nome : 'Anônimo'} falou:</h4>
         </TitleDiv>
-        <h4>{formatDate(data)}</h4>
+        <h4>{data ? formatDate(data) : today.toLocaleDateString()}</h4>
       </HeaderDiv>
       <p>{texto}</p>
       <FooterDiv>

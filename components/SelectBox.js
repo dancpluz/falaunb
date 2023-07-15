@@ -1,4 +1,5 @@
 import Select from 'react-select';
+import { Controller } from 'react-hook-form';
 
 const selectStyles = {
   control: styles => ({
@@ -13,12 +14,13 @@ const selectStyles = {
   }),
   menuPortal: styles => ({
     ...styles,
-    zIndex: 3 
+    zIndex: 4
   }),
   menuList: styles => ({
     ...styles,
     borderRadius: '0.625rem',
     border: '3px solid #1B1C1E',
+    backgroundColor: 'white',
   }),
   singleValue: styles => ({
     ...styles,
@@ -36,17 +38,25 @@ const selectStyles = {
   },
 };
 
-export default function SelectBox({ ...props }) {
+export default function SelectBox({ control,name,options,onChange }) {
+
   return (
-    <>
-      <Select
-        unstyled
-        styles={selectStyles}
-        menuPortalTarget={document.body} 
-        placeholder={''}
-        noOptionsMessage={({ inputValue }) => !inputValue ? 'Sem valores' : 'Não encontrado'}
-        { ...props }
-       />
-    </>
-  )
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required: '(Campo obrigatório)' }}
+      render={({ field: { value,onChange } }) => (
+        <Select
+          value={value}
+          onChange={onChange}
+          options={options}
+          unstyled
+          styles={selectStyles}
+          menuPortalTarget={document.body}
+          placeholder={''}
+          noOptionsMessage={({ inputValue }) => !inputValue ? 'Sem valores' : 'Não encontrado'}
+        />
+      )}
+    />
+  );
 }
