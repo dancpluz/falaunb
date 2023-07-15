@@ -1,34 +1,88 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Como iniciar
+Primeiramente é necessário ter as variáveis de autenticação para se conectar com o banco de dados hosteado na supabase, essas variáveis se encontram no final do relatório. 
+Crie um arquivo ```.env.local``` na raiz e coloque os valores do relatório.
 
-## Getting Started
+Abra a pasta raiz execute o comando ```npm install``` para instalar as dependências.
 
-First, run the development server:
+Depois ligue o servidor em modo de desenvolvimento com o comando ```npm run dev```.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+Abra [http://localhost:3000](http://localhost:3000) no navegador para ver o site.
+
+## Script de criação do Banco de Dados
+Não será necessário executá-los, pois já estão na supabase.
 ```
+CREATE TABLE public.estudante (
+  nome TEXT NOT NULL,
+  email TEXT NOT NULL,
+  senha TEXT NOT NULL,
+  foto TEXT NULL,
+  admin BOOLEAN NOT NULL DEFAULT FALSE,
+  matricula TEXT NOT NULL,
+  CONSTRAINT estudante_pkey PRIMARY KEY (matricula)
+) TABLESPACE pg_default;
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+CREATE TABLE public.avaliacao (
+  codigo SERIAL NOT NULL,
+  texto TEXT NOT NULL,
+  nota SMALLINT NOT NULL,
+  data DATE NOT NULL DEFAULT CURRENT_DATE,
+  cod_turma INTEGER NULL,
+  nome_professor TEXT NOT NULL,
+  mat_estudante TEXT NULL,
+  CONSTRAINT avaliacao_pkey PRIMARY KEY (codigo),
+  CONSTRAINT avaliacao_codigo_key UNIQUE (codigo),
+  CONSTRAINT avaliacao_cod_turma_fkey FOREIGN KEY (cod_turma) REFERENCES turma (codigo),
+  CONSTRAINT avaliacao_mat_estudante_fkey FOREIGN KEY (mat_estudante) REFERENCES estudante (matricula) ON DELETE CASCADE,
+  CONSTRAINT avaliacao_nome_professor_fkey FOREIGN KEY (nome_professor) REFERENCES professor (nome),
+  CONSTRAINT avaliacao_nota_check CHECK (nota <= 5)
+) TABLESPACE pg_default;
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+CREATE TABLE public.denuncia (
+  codigo SERIAL NOT NULL,
+  cod_avaliacao INTEGER NULL,
+  CONSTRAINT denuncia_pkey PRIMARY KEY (codigo),
+  CONSTRAINT denuncia_cod_avaliacao_fkey FOREIGN KEY (cod_avaliacao) REFERENCES avaliacao (codigo) ON DELETE CASCADE
+) TABLESPACE pg_default;
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+CREATE TABLE public.turma (
+  turma TEXT NOT NULL,
+  cod_disciplina VARCHAR NOT NULL,
+  nome_professor TEXT NULL,
+  codigo SERIAL NOT NULL,
+  CONSTRAINT turma_pkey PRIMARY KEY (codigo),
+  CONSTRAINT turma_cod_disciplina_fkey FOREIGN KEY (cod_disciplina) REFERENCES disciplina (codigo) ON DELETE CASCADE,
+  CONSTRAINT turma_nome_professor_fkey FOREIGN KEY (nome_professor) REFERENCES professor (nome) ON DELETE CASCADE
+) TABLESPACE pg_default;
 
-## Learn More
+CREATE TABLE public.professor (
+  nome TEXT NOT NULL,
+  cod_departamento INTEGER NULL,
+  CONSTRAINT professor_pkey PRIMARY KEY (nome),
+  CONSTRAINT professor_cod_departamento_fkey FOREIGN KEY (cod_departamento) REFERENCES departamento (codigo) ON DELETE CASCADE
+) TABLESPACE pg_default;
 
-To learn more about Next.js, take a look at the following resources:
+CREATE TABLE public.departamento (
+  codigo INTEGER NOT NULL,
+  nome TEXT NOT NULL,
+  CONSTRAINT departamento_pkey PRIMARY KEY (codigo)
+) TABLESPACE pg_default;
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+CREATE TABLE public.disciplina (
+  codigo VARCHAR NOT NULL,
+  nome TEXT NOT NULL,
+  cod_departamento INTEGER NULL,
+  CONSTRAINT disciplina_pkey PRIMARY KEY (codigo),
+  CONSTRAINT disciplina_cod_departamento_fkey FOREIGN KEY (cod_departamento) REFERENCES departamento (codigo) ON DELETE CASCADE
+) TABLESPACE pg_default;
+```
+## Scripts de inserção do Banco de Dados
+```
+INSERT INTO public.estudante (matricula, nome, email, senha, foto, admin)
+VALUES ('211055540', 'Daniel Luz', 'dan08jan@gmail.com', '123456', NULL, TRUE);
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+INSERT INTO public.estudante (matricula, nome, email, senha, foto, admin)
+VALUES ('201054541', 'João Paulo', 'joaopaulo@example.com', 'test1', NULL, FALSE);
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+INSERT INTO public.estudante (matricula, nome, email, senha, foto, admin)
+VALUES ('211045544', 'Pedro Regis', 'plantgame@example.com', 'test2', NULL, FALSE);
+```
