@@ -3,18 +3,18 @@
 import Header from '@/components/Header';
 import styled from 'styled-components';
 import InputBox from '@/components/InputBox';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import book from '../../assets/book.svg';
-import classroom from '../../assets/classroom.svg';
+import room from '../../assets/classroom.svg';
 import briefcase from '../../assets/briefcase.svg';
-import teacher from '../../assets/teacher.svg';
+import teach from '../../assets/teacher.svg';
 import '@smastrom/react-rating/style.css';
 import Stars from '@/components/Stars';
 import { useEffect, useState } from 'react';
 import SelectBox from '@/components/SelectBox';
 import ReviewCard from '@/components/ReviewCard';
 import { useAuthContext } from '../../context/AuthContext';
-import { fetchDepartments,fetchTeachers } from '../../utils/fetchFunctions';
+import { fetchDepartments,fetchTeachers,fetchSubjects,fetchClassrooms } from '../../utils/fetchFunctions';
 
 const Container = styled.div`
   display: flex;
@@ -72,16 +72,17 @@ const CheckDiv = styled.div`
 `;
 
 export default function Avaliar() {
-  const { handleSubmit,getValues,register,control,formState: { errors } } = useForm();
+  const { handleSubmit,register,getValues,setValue,control,formState: { errors } } = useForm();
   const { userData } = useAuthContext();
 
   const [departmentOptions,setDepartmentOptions] = useState([]);
   const [teacherOptions, setTeacherOptions] = useState([]);
   const [subjectOptions, setSubjectOptions] = useState([]);
   const [classroomOptions, setClassroomOptions] = useState([]);
-  const [text, setText] = useState('');
-  const [classRoom, setClassRoom] = useState(null);
 
+  const [text, setText] = useState('');
+
+  const [classroom, setClassroom] = useState(null);
   const [anonymous, setAnonymous] = useState(false)
   const [rating,setRating] = useState(0);
 
@@ -95,9 +96,19 @@ export default function Avaliar() {
     fetchDepartmentOptions();
   },[]);
 
-  const handleFetchTeachers = async (input) => {
-    console.log(input)
-    setTeacherOptions(await fetchTeachers(input))
+  const fetchTeacherOptions = async (input) => {
+    setTeacherOptions(await fetchTeachers(input.value))
+  }
+
+  const fetchSubjectOptions = async (input) => {
+    setSubjectOptions(await fetchSubjects(input.value))
+  }
+
+  const fetchClassroomOptions = async (input, teacher) => {
+    const newClass = classroom;
+    newClass.turma = input.label;
+    setClassroom(newClass);
+    setClassroomOptions(await fetchClassrooms(input.value, teacher.value))
   }
 
   return (
@@ -113,7 +124,7 @@ export default function Avaliar() {
                   control={control}
                   name='departamento'
                   options={departmentOptions}
-                  onChange={() => handleFetchTeachers(selectedOption)}
+                  onChange={(e) => {fetchTeacherOptions(e); setValue('departamento',e)}}
                 />
               </InputBox>
               <InputBox title={'Disciplina'} errorMessage={errors.disciplina} icon={book}>
@@ -121,22 +132,25 @@ export default function Avaliar() {
                   control={control}
                   name='disciplina'
                   options={subjectOptions}
+                  onChange={(e) => {fetchClassroomOptions(e, getValues().professor)}}
                 />
               </InputBox>
             </InsideDiv>
             <InsideDiv>
-              <InputBox title={'Professor(a)'} errorMessage={errors.professor} icon={teacher}>
+              <InputBox title={'Professor(a)'} errorMessage={errors.professor} icon={teach}>
                 <SelectBox
                   control={control}
                   name='professor'
                   options={teacherOptions}
+                  onChange={(e) => {fetchSubjectOptions(e); setValue('professor',e)}}
                 />
               </InputBox>
-              <InputBox title={'Turma'} errorMessage={errors.turma} icon={classroom}>
+              <InputBox title={'Turma'} errorMessage={errors.turma} icon={room}>
                 <SelectBox
                   control={control}
                   name='turma'
                   options={classroomOptions}
+                  onChange={(e) => {}}
                 />
               </InputBox>
             </InsideDiv>
@@ -155,7 +169,7 @@ export default function Avaliar() {
             </CheckDiv>
           </BoxesDiv>
           <h4>Sua avaliação ficará assim:</h4>
-          <ReviewCard review={{ mat_estudante: (anonymous ? null : userData),nota: rating,texto: (text == '' ? '(Texto)' : text) }} />
+          <ReviewCard review={{ cod_turma: classroom,mat_estudante: (anonymous ? null : userData),nota: rating,texto: (text == '' ? '(Texto)' : text) }} />
           <button>Enviar</button>
         </form>
       </Modal>

@@ -45,7 +45,7 @@ export default function SelectBox({ control,name,options,onChange }) {
       control={control}
       name={name}
       rules={{ required: '(Campo obrigatório)' }}
-      render={({ field: { value,onChange } }) => (
+      render={({ field: { value } }) => (
         <Select
           value={value}
           onChange={onChange}

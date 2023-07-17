@@ -26,19 +26,19 @@ export const fetchDepartments = async () => {
   }
 };
 
-export const fetchTeachers = async (input) => {
+export const fetchTeachers = async (value) => {
   try {
     const { data,error } = await supabase
       .from('professor')
       .select('nome')
-      .eq('cod_departamento',input)
+      .eq('cod_departamento',value)
 
     if (error) {
       throw new Error('Failed to fetch teacher options');
     }
 
     const optionsArray = data.map((obj) => ({
-      value: input,
+      value: obj.nome,
       label: obj.nome,
     }));
 
@@ -49,3 +49,54 @@ export const fetchTeachers = async (input) => {
     return [];
   }
 };
+
+export const fetchSubjects = async (value) => {
+  try {
+    const { data,error } = await supabase
+      .from('turma')
+      .select('cod_disciplina(codigo,nome)')
+      .eq('nome_professor',value)
+      .order('cod_disciplina(nome)',{ ascending: true });
+
+    if (error) {
+      throw new Error('Failed to fetch subject options');
+    }
+
+    const optionsArray = data.map((obj) => ({
+      value: obj.cod_disciplina.codigo,
+      label: obj.cod_disciplina.nome,
+    }));
+
+    console.log('Subjects Fetched:',optionsArray);
+    return optionsArray;
+  } catch (error) {
+    console.error('Error fetching subject options:',error.message);
+    return [];
+  }
+}
+
+export const fetchClassrooms = async (value, teacher) => {
+  try {
+    const { data,error } = await supabase
+      .from('turma')
+      .select('turma, codigo')
+      .eq('cod_disciplina',value)
+      .eq('nome_professor',teacher)
+      .order('turma',{ ascending: true });
+
+    if (error) {
+      throw new Error('Failed to fetch subject options');
+    }
+
+    const optionsArray = data.map((obj) => ({
+      value: obj.codigo,
+      label: obj.turma,
+    }));
+
+    console.log('Subjects Fetched:',optionsArray);
+    return optionsArray;
+  } catch (error) {
+    console.error('Error fetching subject options:',error.message);
+    return [];
+  }
+}

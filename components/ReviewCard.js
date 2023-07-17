@@ -44,13 +44,12 @@ export default function ReviewCard({ review }) {
   const timeElapsed = Date.now();
   const today = new Date(timeElapsed);
 
-
   return (
     <Container>
       <HeaderDiv>
         <TitleDiv>
           {cod_turma &&
-            <p>{cod_turma.cod_disciplina.nome} - Turma {cod_turma.turma}</p>
+            <p>{cod_turma.cod_disciplina.nome}{cod_turma.turma && `- Turma ${cod_turma.turma}`}</p>
           }
           <h4>{mat_estudante ? mat_estudante.nome : 'Anônimo'} falou:</h4>
         </TitleDiv>
