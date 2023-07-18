@@ -3,7 +3,7 @@
 import Header from '@/components/Header';
 import styled from 'styled-components';
 import InputBox from '@/components/InputBox';
-import { set, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import book from '../../assets/book.svg';
 import room from '../../assets/classroom.svg';
 import briefcase from '../../assets/briefcase.svg';
@@ -15,6 +15,8 @@ import SelectBox from '@/components/SelectBox';
 import ReviewCard from '@/components/ReviewCard';
 import { useAuthContext } from '../../context/AuthContext';
 import { fetchDepartments,fetchTeachers,fetchSubjects,fetchClassrooms } from '../../utils/fetchFunctions';
+import { getNowDate } from '@/utils/formatting.js';
+import supabase from '@/utils/supabase';
 
 const Container = styled.div`
   display: flex;
@@ -73,7 +75,7 @@ const CheckDiv = styled.div`
 
 export default function Avaliar() {
   const { handleSubmit,register,getValues,setValue,control,formState: { errors } } = useForm();
-  const { userData } = useAuthContext();
+  const { userData,router } = useAuthContext();
 
   const [departmentOptions,setDepartmentOptions] = useState([]);
   const [teacherOptions, setTeacherOptions] = useState([]);
@@ -81,16 +83,16 @@ export default function Avaliar() {
   const [classroomOptions, setClassroomOptions] = useState([]);
 
   const [text, setText] = useState('');
-
+  const [teacher, setTeacher] = useState(null);
   const [classroom, setClassroom] = useState(null);
-  const [anonymous, setAnonymous] = useState(false)
+  const [anonymous, setAnonymous] = useState(false);
   const [rating,setRating] = useState(0);
-
-
 
   useEffect(() => {
     const fetchDepartmentOptions = async () => {
       setDepartmentOptions(await fetchDepartments());
+      setTeacher(null);
+      setClassroom(null);
     };
 
     fetchDepartmentOptions();
@@ -101,14 +103,44 @@ export default function Avaliar() {
   }
 
   const fetchSubjectOptions = async (input) => {
+    setTeacher(input.label);
+    setClassroom(null);
     setSubjectOptions(await fetchSubjects(input.value))
   }
 
   const fetchClassroomOptions = async (input, teacher) => {
-    const newClass = classroom;
-    newClass.turma = input.label;
-    setClassroom(newClass);
+    setClassroom({ cod_disciplina: { nome: input.label } });
     setClassroomOptions(await fetchClassrooms(input.value, teacher.value))
+  }
+
+  const makeReview = async (values) => {
+    const review = {
+      texto: values.texto,
+      data: getNowDate(true),
+      nota: rating,
+      cod_turma: values.turma.value,
+      nome_professor: values.professor.value,
+      mat_estudante: (anonymous ? null : userData.matricula)
+    }
+    try {
+      const { data,error } = await supabase
+        .from('avaliacao')
+        .insert(review,{ defaultToNull: true })
+        .select()
+
+      if (error) {
+        console.error('Erro de database:',error);
+        // Handle error, display error message, etc.
+        return;
+      }
+
+      console.log('Avaliado com sucesso:',data);
+      router.push("/")
+      // Redirect to the authenticated page, etc.
+    } catch (error) {
+      console.error('Erro ao enviar avaliação:',error.message);
+      // Handle error, display error message, etc.
+    }
   }
 
   return (
@@ -116,7 +148,7 @@ export default function Avaliar() {
       <Header />
       <Modal>
         <h2>Preencha os dados para fazer sua Avaliação:</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(makeReview)}>
           <BoxesDiv>
             <InsideDiv>
               <InputBox title={'Departamento'} errorMessage={errors.departamento} icon={briefcase}>
@@ -124,7 +156,7 @@ export default function Avaliar() {
                   control={control}
                   name='departamento'
                   options={departmentOptions}
-                  onChange={(e) => {fetchTeacherOptions(e); setValue('departamento',e)}}
+                  fetchFunction={(e) => {fetchTeacherOptions(e); setValue('departamento',e); setTeacher(null); setClassroom(null)}}
                 />
               </InputBox>
               <InputBox title={'Disciplina'} errorMessage={errors.disciplina} icon={book}>
@@ -132,7 +164,7 @@ export default function Avaliar() {
                   control={control}
                   name='disciplina'
                   options={subjectOptions}
-                  onChange={(e) => {fetchClassroomOptions(e, getValues().professor)}}
+                  fetchFunction={(e) => { fetchClassroomOptions(e,getValues().professor); setValue('disciplina',e); }}
                 />
               </InputBox>
             </InsideDiv>
@@ -142,7 +174,7 @@ export default function Avaliar() {
                   control={control}
                   name='professor'
                   options={teacherOptions}
-                  onChange={(e) => {fetchSubjectOptions(e); setValue('professor',e)}}
+                  fetchFunction={(e) => { fetchSubjectOptions(e); setValue('professor',e)}}
                 />
               </InputBox>
               <InputBox title={'Turma'} errorMessage={errors.turma} icon={room}>
@@ -150,7 +182,7 @@ export default function Avaliar() {
                   control={control}
                   name='turma'
                   options={classroomOptions}
-                  onChange={(e) => {}}
+                  fetchFunction={(e) => { setClassroom(prevState => ({ ...prevState,turma: e.label })); setValue('turma',e)}}
                 />
               </InputBox>
             </InsideDiv>
@@ -169,6 +201,7 @@ export default function Avaliar() {
             </CheckDiv>
           </BoxesDiv>
           <h4>Sua avaliação ficará assim:</h4>
+          {teacher && <h3>{teacher}</h3>}
           <ReviewCard review={{ cod_turma: classroom,mat_estudante: (anonymous ? null : userData),nota: rating,texto: (text == '' ? '(Texto)' : text) }} />
           <button>Enviar</button>
         </form>

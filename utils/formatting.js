@@ -1,3 +1,12 @@
+export function getNowDate(insert = false) {
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed);
+  if (insert) {
+    return today.toISOString().split('T')[0]
+  }
+  return today.toLocaleDateString()
+}
+
 export function formatDate(string) {
   let stringArray = string.split('-')
 

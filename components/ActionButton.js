@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Image from 'next/image';
-import edit from '../assets/edit.svg';
+import pen from '../assets/edit.svg';
+import trash from '../assets/trash.svg';
 
 const IconWrapper = styled.div`
   display: flex;
@@ -19,19 +20,15 @@ const Icon = styled(Image)`
 
 `;
 
-// Adicionar mais casos
-
-export default function ActionButton({ type }) {
-  
-  switch (type) {
-    case 'edit':
-      return (
-        <IconWrapper>
-          <Icon src={edit} />
-        </IconWrapper>
-      )
-  }
+export default function ActionButton({ edit,remove }) {
   return (
-    <div>ActionButton</div>
+    <>
+      {remove && <IconWrapper>
+        <Icon alt={trash.src} src={trash} onClick={remove} />
+      </IconWrapper>}
+      {edit && <IconWrapper>
+        <Icon alt={edit.src} src={pen} />
+      </IconWrapper>}
+    </>
   )
 }

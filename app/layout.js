@@ -39,11 +39,10 @@ const GlobalStyle = createGlobalStyle`
   }
 
   textarea {
-    height: 6rem;
+    height: 3rem;
     padding: 1rem;
     resize: none;
   }
-
 
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
@@ -81,7 +80,6 @@ const GlobalStyle = createGlobalStyle`
   input[type="checkbox"]:checked::before {
     transform: scale(1);
   }
-
   
   button {
     height: 3.5rem;

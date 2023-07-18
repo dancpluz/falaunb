@@ -2,7 +2,10 @@ import styled from 'styled-components';
 import { StarDiv } from './LatestReview';
 import Stars from './Stars';
 import ActionButton from './ActionButton';
-import { formatDate } from '@/utils/formatting';
+import { formatDate, getNowDate } from '@/utils/formatting';
+import { useAuthContext } from '../context/AuthContext';
+import { removeReview } from '../utils/actionFunctions';
+
 
 const Container = styled.div`
   display: flex;
@@ -39,11 +42,42 @@ const ButtonsDiv = styled.div`
   gap: 0.625rem;
 `;
 
-export default function ReviewCard({ review }) {
-  const { cod_turma,data,mat_estudante,nota,texto } = review;
-  const timeElapsed = Date.now();
-  const today = new Date(timeElapsed);
+export default function ReviewCard({ review, model }) {
+  const { codigo,cod_turma,data,mat_estudante,nota,texto } = review;
+  const { userData, isAdmin } = useAuthContext();
+  console.log(userData, mat_estudante)
 
+  function renderButtons() {
+    if (userData && mat_estudante) {
+      if (isAdmin || userData.matricula === mat_estudante.matricula) {
+        return (
+          <ActionButton remove={() => { removeReview(codigo) }} />
+        )
+      }
+    }
+  }
+
+  if (model) {
+    return (
+      <Container>
+        <HeaderDiv>
+          <TitleDiv>
+            {cod_turma ? <p>{cod_turma.cod_disciplina.nome} - Turma {cod_turma.turma ? cod_turma.turma : '(?)'}</p> : <p>(Disciplina) - Turma (?)</p>}
+            <h4>{mat_estudante ? mat_estudante.nome : 'Anônimo'} falou:</h4>
+          </TitleDiv>
+          <h4>{data ? formatDate(data) : getNowDate()}</h4>
+        </HeaderDiv>
+        <p>{texto}</p>
+        <FooterDiv>
+          <StarDiv>
+            <h4>Nota: </h4>
+            <Stars rating={nota} />
+          </StarDiv>
+        </FooterDiv>
+      </Container>
+    )
+  }
+  
   return (
     <Container>
       <HeaderDiv>
@@ -53,7 +87,7 @@ export default function ReviewCard({ review }) {
           }
           <h4>{mat_estudante ? mat_estudante.nome : 'Anônimo'} falou:</h4>
         </TitleDiv>
-        <h4>{data ? formatDate(data) : today.toLocaleDateString()}</h4>
+        <h4>{data ? formatDate(data) : getNowDate()}</h4>
       </HeaderDiv>
       <p>{texto}</p>
       <FooterDiv>
@@ -62,9 +96,10 @@ export default function ReviewCard({ review }) {
           <Stars rating={nota} />
         </StarDiv>
         <ButtonsDiv>
-          <ActionButton type={'edit'}/>
+          {renderButtons()}
         </ButtonsDiv>
       </FooterDiv>
     </Container>
   )
 }
+

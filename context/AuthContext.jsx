@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isLogged,setIsLogged] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(true);
-  const [userData, setUserData] = useState({nome: 'Teste'});
+  const [isLogged,setIsLogged] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userData, setUserData] = useState(null);
   const [loginError,setLoginError] = useState('');
   //const [signUpError, setSignUpError] = useState('')
   const router = useRouter();
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const onLogout = async (input) => {
+  const onLogout = async () => {
     setIsLogged(false);
     setIsAdmin(false);
     setUserData(null);
@@ -95,7 +95,8 @@ export const AuthProvider = ({ children }) => {
         setUserData,
         onLogin,
         onLogout,
-        onSignUp
+        onSignUp,
+        router
       }}
     >
       {children}

@@ -34,7 +34,7 @@ export default function Home() {
     const fetchReviews = async () => {
       const { data } = await supabase
         .from("avaliacao")
-        .select(`*, cod_turma(turma, cod_disciplina(nome)), mat_estudante(nome)`)
+        .select(`*, cod_turma(turma, cod_disciplina(nome)), mat_estudante(nome,matricula)`)
         .order("codigo",{ ascending: false });
 
       // Faz um objeto com os professores como chaves e um Array com suas reviews
@@ -55,6 +55,18 @@ export default function Home() {
 
     fetchReviews()
   },[])
+
+  function renderCards(title,reviews) {
+    return (
+      <>
+        <h3>Prof. {title}</h3>
+        {reviews.map((review) => {
+          return (<ReviewCard key={review.codigo} review={review} />)
+        })}
+      </>
+    )
+  }
+
 
   if (isLoading) {
     return (
@@ -78,16 +90,5 @@ export default function Home() {
         }
       </Modal>
     </Container>
-  )
-}
-
-function renderCards(title, reviews) {
-  return (
-    <>
-      <h3>Prof. {title}</h3>
-      {reviews.map((review) => {
-        return (<ReviewCard key={review.codigo} review={review}/>)
-      })}
-    </>
   )
 }

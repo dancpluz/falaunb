@@ -1,7 +1,6 @@
 import supabase from './supabase';
 import { formatDepartment } from './formatting';
 
-
 export const fetchDepartments = async () => {
   try {
     const { data,error } = await supabase

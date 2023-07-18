@@ -38,17 +38,17 @@ const selectStyles = {
   },
 };
 
-export default function SelectBox({ control,name,options,onChange }) {
+export default function SelectBox({ control,name,options,fetchFunction }) {
 
   return (
     <Controller
       control={control}
       name={name}
       rules={{ required: '(Campo obrigatório)' }}
-      render={({ field: { value } }) => (
+      render={({ field: { value, onChange } }) => (
         <Select
           value={value}
-          onChange={onChange}
+          onChange={fetchFunction ? fetchFunction : onChange}
           options={options}
           unstyled
           styles={selectStyles}

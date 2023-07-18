@@ -60,7 +60,6 @@ export default function Cadastrar() {
   const [departmentOptions, setDepartmentOptions] = useState([]);
   //const [signUpError,setSignUpError] = useState('');
   const { onSignUp } = useAuthContext();
-  const onSubmit = data => console.log(data);
 
   useEffect(() => {
     const fetchDepartmentOptions = async () => {
