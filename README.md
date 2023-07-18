@@ -8,6 +8,8 @@ Depois ligue o servidor em modo de desenvolvimento com o comando ```npm run dev`
 
 Abra [http://localhost:3000](http://localhost:3000) no navegador para ver o site.
 
+Vídeo da interface: [http://https://youtu.be/Jlm4G9FP2wg](http://https://youtu.be/Jlm4G9FP2wg)
+
 ## Script de criação do Banco de Dados
 Não será necessário executá-los, pois já estão na supabase.
 ```
