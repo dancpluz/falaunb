@@ -1,18 +1,79 @@
-## Como iniciar
-Primeiramente é necessário ter as variáveis de autenticação para se conectar com o banco de dados hosteado na supabase, essas variáveis se encontram no final do relatório. 
-Crie um arquivo ```.env.local``` na raiz e coloque os valores do relatório.
+<p align="center">
+  <picture>
+    <source width='20%' media="(prefers-color-scheme: dark)" srcset="assets/logo.svg">
+    <img width='20%' src="assets/logoBig.svg">
+  </picture>
+</p>
 
-Abra a pasta raiz execute o comando ```npm install``` para instalar as dependências.
+## 📚 About
 
-Depois ligue o servidor em modo de desenvolvimento com o comando ```npm run dev```.
+<picture>
+  <img src="https://cdn.rawgit.com/dancpluz/falaunb/main/assets/falaunb-demo.gif" align="right" width="40%"/>
+</picture>
 
-Abra [http://localhost:3000](http://localhost:3000) no navegador para ver o site.
+The **FalaUnB** project is a teacher and class evaluation system developed as a final project for the **Database** course at the **University of Brasília (UnB)**. The main goal was to model, implement, and demonstrate a robust relational database for a web application that allows students to rate their experiences in classes and with professors.
 
-Vídeo da interface: [http://youtu.be/Jlm4G9FP2wg](http://youtu.be/Jlm4G9FP2wg)
+The application was built with an intuitive interface for students to interact with it in a simple and direct way. The project focused on deepening our understanding of data modeling, normalization (with tables following the 1st, 2nd, and 3rd Normal Forms), and the practical application of database management systems, using **PostgreSQL** and **Supabase**.
 
-## Script de criação do Banco de Dados
-Não será necessário executá-los, pois já estão na supabase.
+Although some requirements were not fully implemented, the project served as a solid and scalable foundation, demonstrating the importance of a well-defined database architecture for developing complex and useful applications for the academic community.
+
+## 📌 Features
+
+- **Teacher and Class Evaluation:** A system that allows the submission of evaluations with ratings and comments.
+- **Relational Structure:** A database modeled with entities for `student`, `professor`, `class`, `subject`, and `department`.
+- **User-Friendly Interface:** A frontend developed with Next.js for a fluid and responsive user experience.
+- **Form Validation:** Ensures data integrity before submission to the backend.
+- **Technical Reports:** Complete documentation on the database modeling and implementation process.
+
+## 🛠 Built With
+
+<p align="left">
+  <img src="https://skillicons.dev/icons?i=nextjs,react,nodejs,postgresql,supabase,styledcomponents,js" />
+</p>
+
+- **Frontend:** Next.js, React, Styled Components
+- **Backend:** Node.js, PostgreSQL
+- **Database-as-a-Service (DBaaS):** Supabase
+- **Reports:** LaTeX (Overleaf)
+
+## 👨‍💻 How to Run
+
+### Prerequisites
+
+To run this project, you need to have **Node.js** and **npm** installed. Additionally, you must configure the environment variables to connect to the database.
+
+### Environment Variables
+
+Create a `.env.local` file in the project's root directory with the following access variables (available in the technical report):
+
 ```
+
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+
+````
+
+### Instructions
+
+1.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+2.  **Start the development server:**
+    ```bash
+    npm run dev
+    ```
+3.  **Open the application in your browser:**
+    ```bash
+    start http://localhost:3000
+    ```
+
+<details>
+  <summary>Click to see the Database Structure</summary>
+  
+### Creation Scripts
+```sql
 CREATE TABLE public.estudante (
   nome TEXT NOT NULL,
   email TEXT NOT NULL,
@@ -76,9 +137,11 @@ CREATE TABLE public.disciplina (
   CONSTRAINT disciplina_pkey PRIMARY KEY (codigo),
   CONSTRAINT disciplina_cod_departamento_fkey FOREIGN KEY (cod_departamento) REFERENCES departamento (codigo) ON DELETE CASCADE
 ) TABLESPACE pg_default;
-```
-## Scripts de inserção do Banco de Dados
-```
+````
+
+### Insertion Scripts
+
+```sql
 INSERT INTO public.estudante (matricula, nome, email, senha, foto, admin)
 VALUES ('211055540', 'Daniel Luz', 'dan08jan@gmail.com', '123456', NULL, TRUE);
 
@@ -87,4 +150,22 @@ VALUES ('201054541', 'João Paulo', 'joaopaulo@example.com', 'test1', NULL, FALS
 
 INSERT INTO public.estudante (matricula, nome, email, senha, foto, admin)
 VALUES ('211045544', 'Pedro Regis', 'plantgame@example.com', 'test2', NULL, FALSE);
+```
+
+</details>
+
+## 👥 Group / Author(s)
+
+This project was developed by:
+
+  - **Daniel Luz** — [GitHub](https://github.com/dancpluz)
+
+## 🤝 Contributions / Acknowledgements
+
+This project was developed for the **Database** course at the **University of Brasília (UnB)**.
+
+  - **Full Report:** A detailed technical report, including database modeling and the development process, is available at [https://www.overleaf.com/read/zjrntmfwpfnn\#89bf8e](https://www.overleaf.com/read/zjrntmfwpfnn#89bf8e).
+  - **Demo:** A brief demo of the system can be seen in this video: [https://youtu.be/Jlm4G9FP2wg](https://youtu.be/Jlm4G9FP2wg).
+
+```
 ```
