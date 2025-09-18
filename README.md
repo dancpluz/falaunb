@@ -7,10 +7,6 @@
 
 ## 📚 About
 
-<picture>
-  <img src="https://cdn.rawgit.com/dancpluz/falaunb/main/assets/falaunb-demo.gif" align="right" width="40%"/>
-</picture>
-
 The **FalaUnB** project is a teacher and class evaluation system developed as a final project for the **Database** course at the **University of Brasília (UnB)**. The main goal was to model, implement, and demonstrate a robust relational database for a web application that allows students to rate their experiences in classes and with professors.
 
 The application was built with an intuitive interface for students to interact with it in a simple and direct way. The project focused on deepening our understanding of data modeling, normalization (with tables following the 1st, 2nd, and 3rd Normal Forms), and the practical application of database management systems, using **PostgreSQL** and **Supabase**.
@@ -166,6 +162,3 @@ This project was developed for the **Database** course at the **University of Br
 
   - **Full Report:** A detailed technical report, including database modeling and the development process, is available at [https://www.overleaf.com/read/zjrntmfwpfnn\#89bf8e](https://www.overleaf.com/read/zjrntmfwpfnn#89bf8e).
   - **Demo:** A brief demo of the system can be seen in this video: [https://youtu.be/Jlm4G9FP2wg](https://youtu.be/Jlm4G9FP2wg).
-
-```
-```
